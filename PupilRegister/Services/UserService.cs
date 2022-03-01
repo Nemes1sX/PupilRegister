@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PupilRegister.Configuration;
 using PupilRegister.DataContext;
+using PupilRegister.Interfaces;
 using PupilRegister.Models.Entities;
 using PupilRegister.Models.FormRequest;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PupilRegister.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
 
         private readonly PupilRegisterContext _db;
