@@ -13,8 +13,8 @@ namespace PupilRegister.Models.Entities
         public string Name { get; set; }
         [Required]
         public string Email { get; set; }
-        [Required]
-        public string Password { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
         public virtual List<Pupil> Pupils { get; set; }
     }
 }
