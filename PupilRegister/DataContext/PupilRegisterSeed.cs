@@ -1,7 +1,7 @@
 ﻿using PupilRegister.Models.Entities;
 using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
-using System;
+using PupilRegister.Configuration;
 
 namespace PupilRegister.DataContext
 {
@@ -9,6 +9,11 @@ namespace PupilRegister.DataContext
     {
         public static void Seed(ModelBuilder builder) 
         {
+            byte[] passwordHash, passwordSalt;
+            var password = "password";
+           PasswordHash.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+
             var schools = Builder<School>.CreateListOfSize(20)
                 .All()
                     .With(x => x.Name = Faker.Company.Name())
@@ -18,6 +23,8 @@ namespace PupilRegister.DataContext
                 .All()
                     .With(x => x.Email = Faker.Internet.Email())
                     .With(x => x.Name = Faker.Name.FullName())
+                    .With(x => x.PasswordSalt = passwordSalt)
+                    .With(x => x.PasswordHash = passwordHash)
                 .Build();
 
             var pupils = Builder<Pupil>.CreateListOfSize(60)
@@ -31,5 +38,6 @@ namespace PupilRegister.DataContext
             builder.Entity<Parent>().HasData(parents);
             builder.Entity<Pupil>().HasData(pupils);
         }
+
     }
 }

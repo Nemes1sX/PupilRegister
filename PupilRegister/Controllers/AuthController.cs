@@ -27,7 +27,7 @@ namespace PupilRegister.Controllers
         }
 
 
-        [HttpPost("authenticate")]
+        [HttpPost]
         public IActionResult Authenticate([FromBody] LoginRequest request)
         {
             var parent = _userService.Authenticate(request.Email, request.Password);
@@ -56,7 +56,7 @@ namespace PupilRegister.Controllers
             });
         }
 
-        [HttpPost("register")]
+        [HttpPost]
         public IActionResult Register([FromBody] RegisterRequest request)
         {
 
