@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PupilRegister.Configuration;
 using PupilRegister.DataContext;
+using PupilRegister.Infrastructure;
 using PupilRegister.Interfaces;
 using PupilRegister.Services;
 using System;
@@ -39,6 +40,8 @@ namespace PupilRegister
             services.AddCors();
             services.AddControllers();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPupilService, PupilService>();
+            services.AddScoped<Mapping>();
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.AddDbContextPool<PupilRegisterContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("PupilRegisterDatabase")));
