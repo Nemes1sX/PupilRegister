@@ -10,7 +10,7 @@ namespace PupilRegister.DataContext
         public static void Seed(ModelBuilder builder) 
         {
             byte[] passwordHash, passwordSalt;
-            var password = "password";
+            var password = "password1234";
            PasswordHash.CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
 

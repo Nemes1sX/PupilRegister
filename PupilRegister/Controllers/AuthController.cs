@@ -9,6 +9,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace PupilRegister.Controllers
 {
@@ -20,14 +21,15 @@ namespace PupilRegister.Controllers
         private readonly IUserService _userService;
         private readonly JwtConfig _jwtConfig;
 
-        public AuthController(IUserService userService, JwtConfig jwtConfig)
+        public AuthController(IUserService userService, IOptions<JwtConfig> jwtConfig)
         {
             _userService = userService;
-            _jwtConfig = jwtConfig;
+            _jwtConfig = jwtConfig.Value;
         }
 
 
         [HttpPost]
+        [Route("login")]
         public IActionResult Authenticate([FromBody] LoginRequest request)
         {
             var parent = _userService.Authenticate(request.Email, request.Password);
@@ -36,7 +38,7 @@ namespace PupilRegister.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
+            var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -52,7 +54,7 @@ namespace PupilRegister.Controllers
             // return basic user info and authentication token
             return Ok(new
             {
-                Token = tokenString
+                Token = tokenString,         
             });
         }
 

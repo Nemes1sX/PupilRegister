@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PupilRegister.Configuration;
+using PupilRegister.DataContext;
 using PupilRegister.Interfaces;
 using PupilRegister.Services;
 using System;
@@ -36,7 +38,10 @@ namespace PupilRegister
             services.AddScoped<IUserService, UserService>();
             services.AddCors();
             services.AddControllers();
+            services.AddScoped<IUserService, UserService>();
             var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.AddDbContextPool<PupilRegisterContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("PupilRegisterDatabase")));
             services.Configure<JwtConfig>(appSettingsSection);
 
             // configure jwt authentication

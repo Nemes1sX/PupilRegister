@@ -4,7 +4,7 @@ using PupilRegister.Models.Entities;
 
 namespace PupilRegister.DataContext
 {
-    public class PupilRegisterContext : IdentityDbContext
+    public class PupilRegisterContext : DbContext
     {
         public PupilRegisterContext(DbContextOptions<PupilRegisterContext> options) : base(options)
         {

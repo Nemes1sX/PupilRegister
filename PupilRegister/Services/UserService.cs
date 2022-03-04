@@ -41,7 +41,7 @@ namespace PupilRegister.Services
             return user;
         }
 
-        public Parent Create(RegisterRequest request, string password)
+        public async Task<Parent> Create(RegisterRequest request, string password)
         {
             // validation
             if (string.IsNullOrWhiteSpace(password))
@@ -61,7 +61,7 @@ namespace PupilRegister.Services
             parent.PasswordSalt = passwordSalt;
 
             _db.Parents.Add(parent);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return parent;
         }

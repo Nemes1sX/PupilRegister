@@ -36,4 +36,5 @@ namespace PupilRegister.Configuration
 
             return true;
         }
+    }
 }
