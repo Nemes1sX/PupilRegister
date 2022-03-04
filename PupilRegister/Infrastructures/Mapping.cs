@@ -2,7 +2,7 @@
 using PupilRegister.Models.Entities;
 using System.Collections.Generic;
 
-namespace PupilRegister.Infrastructure
+namespace PupilRegister.Infrastructures
 {
     public class Mapping
     {
@@ -14,7 +14,7 @@ namespace PupilRegister.Infrastructure
             {
                 var pupilSchoolDto = new PupilSchoolDto();
                 pupilSchoolDto.Name = pupilSchool.Name;
-                pupilSchoolDto.School = pupilSchool.School;
+                pupilSchoolDto.School = pupilSchool.School.Name;
                 pupilSchoolsDto.Add(pupilSchoolDto);
             }
 

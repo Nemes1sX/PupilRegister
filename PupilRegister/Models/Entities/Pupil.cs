@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PupilRegister.Models.Entities
 {
+    [Table("Pupil")]
     public class Pupil
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

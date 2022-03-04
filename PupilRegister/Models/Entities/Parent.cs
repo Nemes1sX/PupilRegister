@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PupilRegister.Models.Entities
 {
+    [Table("Parent")]
     public class Parent
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

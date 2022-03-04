@@ -17,8 +17,8 @@ namespace PupilRegister.DataContext
             PupilRegisterSeed.Seed(builder);
         }
 
-        public DbSet<School> Schools;
-        public DbSet<Pupil> Pupils;
-        public DbSet<Parent> Parents;
+        public DbSet<School> Schools { get; set; }
+        public DbSet<Pupil> Pupils { get; set; }
+        public DbSet<Parent> Parents { get; set; }
     }
 }

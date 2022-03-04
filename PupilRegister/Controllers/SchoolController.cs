@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PupilRegister.Services;
+using PupilRegister.Interfaces;
 using System.Threading.Tasks;
 
 namespace PupilRegister.Controllers
@@ -9,18 +9,23 @@ namespace PupilRegister.Controllers
     [ApiController]
     public class SchoolController : ControllerBase
     {
-        private readonly PupilService _pupilService;
+        private readonly IPupilService _pupilService;
 
-        public SchoolController(PupilService pupilService)
+        public SchoolController(IPupilService pupilService)
         {
             _pupilService = pupilService;
         }
 
         [HttpGet]
         [Route("pupil")]
-        public async Task<IActionResult> PupilSchools(int parentId)
+        public async Task<IActionResult> PupilSchools(int id = 1)
         {
-            return Ok(new { PupilSchools = await _pupilService.GetParentPupilSchools(parentId) });
+            var pupilSchools = await _pupilService.GetParentPupilSchools(id);
+
+            if (pupilSchools == null)
+                return NotFound();
+
+            return Ok(new { PupilSchools = pupilSchools });
         }
     }
 }

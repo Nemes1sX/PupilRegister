@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PupilRegister.Configuration;
 using PupilRegister.DataContext;
-using PupilRegister.Infrastructure;
+using PupilRegister.Infrastructures;
 using PupilRegister.Interfaces;
 using PupilRegister.Services;
 using System;
@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace PupilRegister
 {
@@ -39,6 +40,8 @@ namespace PupilRegister
             services.AddScoped<IUserService, UserService>();
             services.AddCors();
             services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(x =>
+               x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPupilService, PupilService>();
             services.AddScoped<Mapping>();
