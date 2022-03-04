@@ -10,6 +10,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using PupilRegister.Models.Entities;
 
 namespace PupilRegister.Controllers
 {
@@ -19,11 +23,13 @@ namespace PupilRegister.Controllers
     {
 
         private readonly IUserService _userService;
+        private readonly UserManager<Parent> _userManager;
         private readonly JwtConfig _jwtConfig;
 
-        public AuthController(IUserService userService, IOptions<JwtConfig> jwtConfig)
+        public AuthController(IUserService userService, IOptions<JwtConfig> jwtConfig, UserManager<Parent> userManager)
         {
             _userService = userService;
+            _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
         }
 
@@ -56,6 +62,16 @@ namespace PupilRegister.Controllers
             {
                 Token = tokenString,         
             });
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("get")]
+        public async Task<IActionResult> GetUserId()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            return Ok(user.Id);
         }
 
         [HttpPost]
