@@ -6,7 +6,7 @@ namespace PupilRegister.Infrastructure
     {
         public PupilSchoolDto MapPupilSchool()
         {
-
+            return new PupilSchoolDto();
         }
     }
 }
