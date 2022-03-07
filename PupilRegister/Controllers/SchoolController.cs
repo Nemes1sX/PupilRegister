@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PupilRegister.Interfaces;
 using System.Threading.Tasks;
@@ -16,11 +17,14 @@ namespace PupilRegister.Controllers
             _pupilService = pupilService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("pupil")]
-        public async Task<IActionResult> PupilSchools(int id = 1)
+        public async Task<IActionResult> PupilSchools()
         {
-            var pupilSchools = await _pupilService.GetParentPupilSchools(id);
+            var userId = int.Parse(User.Identity.Name);
+
+            var pupilSchools = await _pupilService.GetParentPupilSchools(userId);
 
             if (pupilSchools == null)
                 return NotFound();

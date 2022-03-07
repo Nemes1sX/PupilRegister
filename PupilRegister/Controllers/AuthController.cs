@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using PupilRegister.Models.Entities;
+using PupilRegister.DataContext;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace PupilRegister.Controllers
 {
@@ -23,26 +26,29 @@ namespace PupilRegister.Controllers
     {
 
         private readonly IUserService _userService;
-        private readonly UserManager<Parent> _userManager;
+        //private readonly UserManager<Parent> _userManager;
+        private readonly PupilRegisterContext _db;
         private readonly JwtConfig _jwtConfig;
 
-        public AuthController(IUserService userService, IOptions<JwtConfig> jwtConfig, UserManager<Parent> userManager)
+        public AuthController(IUserService userService, IOptions<JwtConfig> jwtConfig, PupilRegisterContext db)
         {
             _userService = userService;
-            _userManager = userManager;
+            _db = db;
+            //_userManager = userManager;
             _jwtConfig = jwtConfig.Value;
         }
 
 
         [HttpPost]
         [Route("login")]
-        public IActionResult Authenticate([FromBody] LoginRequest request)
+        public async Task<IActionResult> Authenticate([FromBody] LoginRequest request)
         {
-            var parent = _userService.Authenticate(request.Email, request.Password);
+            var parent = await _userService.Authenticate(request.Email, request.Password);
 
             if (parent == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
+            //var currentParent = await _db.Parents.SingleOrDefaultAsync(x => x.Email == request.Email);
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -64,16 +70,7 @@ namespace PupilRegister.Controllers
             });
         }
 
-        [Authorize]
-        [HttpGet]
-        [Route("get")]
-        public async Task<IActionResult> GetUserId()
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-
-            return Ok(user.Id);
-        }
-
+   
         [HttpPost]
         public IActionResult Register([FromBody] RegisterRequest request)
         {
