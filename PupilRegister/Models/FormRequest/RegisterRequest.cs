@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PupilRegister.Models.FormRequest.Rules;
+using System.ComponentModel.DataAnnotations;
 
 namespace PupilRegister.Models.FormRequest
 {
@@ -6,7 +7,7 @@ namespace PupilRegister.Models.FormRequest
     {
         [Required, MinLength(6)]
         public string Name { get; set; }
-        [Required, EmailAddress]
+        [Required, EmailAddress, UniqueEmail]
         public string Email { get; set; }
         [Required, MinLength(12)]
         public string Password { get; set; }

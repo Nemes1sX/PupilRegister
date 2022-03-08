@@ -72,20 +72,11 @@ namespace PupilRegister.Controllers
 
    
         [HttpPost]
+        [Route("register")]
         public IActionResult Register([FromBody] RegisterRequest request)
         {
-
-            try
-            {
-                // create user
-                _userService.Create(request, request.Password);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
+            _userService.Create(request, request.Password);
+            return Ok(new {Name =  request.Name, Email = request.Email});
         }
     }
 }

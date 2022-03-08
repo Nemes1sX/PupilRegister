@@ -43,13 +43,6 @@ namespace PupilRegister.Services
 
         public async Task<Parent> Create(RegisterRequest request, string password)
         {
-            // validation
-            if (string.IsNullOrWhiteSpace(password))
-                throw new AppException("Password is required");
-
-            if (_db.Parents.Any(x => x.Email == request.Email))
-                throw new AppException("Username \"" + request.Email + "\" is already taken");
-
             byte[] passwordHash, passwordSalt;
            PasswordHash.CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
