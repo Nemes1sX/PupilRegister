@@ -8,6 +8,7 @@ namespace PupilRegister.Interfaces
     {
         Task<Parent> Create(RegisterRequest request, string password);
         Task<Parent> Authenticate(string username, string password);
+        string GenerateToken(int parentId);
         Task<Parent> GetById(int id);
     }
 }

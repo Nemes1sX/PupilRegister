@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using PupilRegister.Configuration;
 using PupilRegister.DataContext;
 using PupilRegister.Interfaces;
 using PupilRegister.Models.Entities;
 using PupilRegister.Models.FormRequest;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,17 +20,16 @@ namespace PupilRegister.Services
     {
 
         private readonly PupilRegisterContext _db;
+        private readonly JwtConfig _jwtConfig;
 
-        public UserService(PupilRegisterContext db)
+        public UserService(PupilRegisterContext db, IOptions<JwtConfig> jwtConfig)
         {
             _db = db;
+            _jwtConfig = jwtConfig.Value;
         }
 
         public async Task<Parent> Authenticate(string username, string password)
-        {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
-
+        {  
             var user = await _db.Parents.SingleOrDefaultAsync(x => x.Email == username);
 
             // check if username exists
@@ -57,6 +60,25 @@ namespace PupilRegister.Services
             await _db.SaveChangesAsync();
 
             return parent;
+        }
+
+        public string GenerateToken(int parentId)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, parentId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
         }
 
         public async Task<Parent> GetById(int id)

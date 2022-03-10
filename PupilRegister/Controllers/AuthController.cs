@@ -26,16 +26,13 @@ namespace PupilRegister.Controllers
     {
 
         private readonly IUserService _userService;
-        //private readonly UserManager<Parent> _userManager;
         private readonly PupilRegisterContext _db;
-        private readonly JwtConfig _jwtConfig;
 
-        public AuthController(IUserService userService, IOptions<JwtConfig> jwtConfig, PupilRegisterContext db)
+
+        public AuthController(IUserService userService,  PupilRegisterContext db)
         {
             _userService = userService;
             _db = db;
-            //_userManager = userManager;
-            _jwtConfig = jwtConfig.Value;
         }
 
 
@@ -48,20 +45,7 @@ namespace PupilRegister.Controllers
             if (parent == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
-            //var currentParent = await _db.Parents.SingleOrDefaultAsync(x => x.Email == request.Email);
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, parent.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            var tokenString = _userService.GenerateToken(parent.Id);
 
             // return basic user info and authentication token
             return Ok(new
