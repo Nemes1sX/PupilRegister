@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PupilRegister.DataContext;
 using PupilRegister.Infrastructures;
 using PupilRegister.Interfaces;
 using PupilRegister.Models.DTO;
@@ -11,18 +10,18 @@ namespace PupilRegister.Services
 {
     public class PupilService : IPupilService
     {
-        private readonly PupilRegisterContext _db;
+        private readonly IPupilRepository _repository;
         private readonly Mapping _mapper;
 
-        public PupilService(PupilRegisterContext db, Mapping mapper)
+        public PupilService(Mapping mapper, IPupilRepository repository)
         {
-            _db = db;
             _mapper = mapper;
+            _repository = repository;
         }
 
         public async Task<List<PupilSchoolDto>> GetParentPupilSchools(int parentId)
         {
-            var pupilSchools = await _db.Pupils.Where(x => x.ParentId == parentId).Include(x => x.School).ToListAsync();
+            var pupilSchools = await _repository.GetPupilSchool(parentId);
 
             if (!pupilSchools.Any())
                 return null;

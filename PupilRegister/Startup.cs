@@ -1,27 +1,20 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PupilRegister.Configuration;
 using PupilRegister.DataContext;
 using PupilRegister.Infrastructures;
 using PupilRegister.Interfaces;
 using PupilRegister.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PupilRegister.Repoistories;
 
 namespace PupilRegister
 {
@@ -44,6 +37,7 @@ namespace PupilRegister
                x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPupilService, PupilService>();
+            services.AddScoped<IPupilRepository, PupilRepository>();
             services.AddScoped<Mapping>();
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.AddDbContextPool<PupilRegisterContext>(options =>
