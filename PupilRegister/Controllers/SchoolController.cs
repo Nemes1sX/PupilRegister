@@ -22,7 +22,8 @@ namespace PupilRegister.Controllers
         [Route("pupil")]
         public async Task<IActionResult> PupilSchools()
         {
-            var userId = int.Parse(User.Identity.Name);
+            int userId;
+            int.TryParse(User.Identity.Name, out userId);
 
             var pupilSchools = await _pupilService.GetParentPupilSchools(userId);
 
